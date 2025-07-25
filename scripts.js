@@ -4,35 +4,70 @@ const nums = [...document.querySelectorAll(".number")];
 
 const operators = [...document.querySelectorAll(".operator")];
 
-let operator = false;
+const equal = document.querySelector("#equals");
 
-nums.forEach((num) => num.addEventListener('click', () => screen.value = screen.value + num.textContent));
+const reset = document.querySelector("#reset");
+
+let usedOperator = false;
+
+let num1 = 0;
+
+let num2 = 0;
+
+let operator;
+
+equal.addEventListener('click', () => equals());
+
+reset.addEventListener('click', () => {
+    num1 = 0;
+    num2 = 0;
+    usedOperator = false;
+    screen.value = "";
+})
+
+nums.forEach((num) => num.addEventListener('click', () => {
+    screen.value = screen.value + num.textContent;
+    screen.focus();
+}));
 
 operators.forEach((op) => op.addEventListener('click', () => {
-    if(!operator)
+    if(!usedOperator)
     {
-        screen.value = screen.value + op.textContent;
+        operate(op.textContent);
+        screen.focus();
     }
-
 }));
 
 //only allows numbers so letters aren't calculated
 screen.addEventListener("keypress", (event) => {
-    const allowedChars = "0123456789";
+    const allowedChars = "0123456789.";
+    const opChars = "+-*/";
     const key = String.fromCharCode(event.keyCode || event.which);
     if (!allowedChars.includes(key)) {
         event.preventDefault();
     }
 });
 
-//only allows 1 operator at a time
-if(!operator)
+function operate(str)
 {
-    screen.addEventListener("keypress", (event) => {
-    const allowedChars ="+-*/";
-    const key = String.fromCharCode(event.keyCode || event.which);
-    if (!allowedChars.includes(key)) {
-        event.preventDefault();
-    }
-    });
+    num1 = +screen.value;
+    operator = str;
+    screen.value = "";
+    usedOperator = true;
+}
+
+function equals()
+{
+    num2 = +screen.value;
+    usedOperator = false;
+    result = ops[operator](num1, num2);
+    screen.value = result;
+    screen.focus();
+}
+
+const ops = {
+    '+': (a, b) => a + b,
+    '-': (a, b) => a - b,
+    '*': (a, b) => a * b,
+    '/': (a, b) => a / b,
 }
