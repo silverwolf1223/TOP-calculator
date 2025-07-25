@@ -43,6 +43,10 @@ screen.addEventListener("keypress", (event) => {
     const allowedChars = "0123456789.";
     const opChars = "+-*/";
     const key = String.fromCharCode(event.keyCode || event.which);
+    if(opChars.includes(key))
+    {
+        operate(key);
+    }
     if (!allowedChars.includes(key)) {
         event.preventDefault();
     }
