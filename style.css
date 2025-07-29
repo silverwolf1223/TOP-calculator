@@ -6,6 +6,11 @@
 
 body {
     display: flex;
+    justify-content: center;
+}
+
+.left {
+    display: flex;
     flex-direction: column;
     align-items: center;
 }
@@ -13,6 +18,11 @@ body {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+#screen[type="text"] {
+    text-align: end;
+}
+
 #numpad, #operatorpad {
     list-style: none;
     display: flex;
