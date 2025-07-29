@@ -1,3 +1,27 @@
+* {
+    padding: 0px;
+    margin: 0px;
+    gap: 0px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#screen {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 #numpad, #operatorpad {
     list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 175px;
+}
+
+button {
+    height: 50px;
+    width: 50px;
 }

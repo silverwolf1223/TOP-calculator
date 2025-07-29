@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <input type="text" id="screen" pattern="[0-9]{5}">
+    <input type="text" id="screen">
 
     <ol id="numpad">
         <li><button class="number">1</button></li>
@@ -27,10 +27,11 @@
         <li><button class="operator">-</button></li>
         <li><button class="operator">*</button></li>
         <li><button class="operator">/</button></li>
+        <li><button id="negpos">(+/-)</button></li>
         <li><button id="equals">=</button></li>
     </ul>
 
-    <button id="reset">reset</button>
+    <button id="reset">clear</button>
 
 
     <script src="scripts.js"></script>
