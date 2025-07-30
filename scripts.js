@@ -4,11 +4,11 @@ const nums = [...document.querySelectorAll(".number")];
 
 const operators = [...document.querySelectorAll(".operator")];
 
-const equal = document.querySelector("#equals");
-
-const clear = document.querySelector("#reset");
+const clearButton = document.querySelector("#reset");
 
 const negative = document.querySelector("#negpos");
+
+const undoButton = document.querySelector("#undo");
 
 let isNeg = false;
 
@@ -22,21 +22,16 @@ let num2 = undefined;
 
 let operator;
 
-equal.addEventListener('click', () =>  calculate(equal.textContent));
-
 negative.addEventListener('click', () => switchSign());
 
-clear.addEventListener('click', () => {
-    num1 = undefined;
-    num2 = undefined;
-    isNeg = false;
-    screen.value = "";
-    locked = false;
-})
+undoButton.addEventListener('click', () => undo());
+
+clearButton.addEventListener('click', () => clear());
 
 nums.forEach((num) => num.addEventListener('click', () => {
     if(!locked)
     {
+        if(num.textContent == "." && screen.value.includes(".")) return;
         if(newNum == true)
         {
             newNum = false;
@@ -54,6 +49,16 @@ operators.forEach((op) => op.addEventListener('click', () => {
         screen.focus();
     }
 }));
+
+function clear()
+{
+    num1 = undefined;
+    num2 = undefined;
+    operator = "";
+    isNeg = false;
+    screen.value = "";
+    locked = false;
+}
 
 function switchSign()
 {
@@ -82,7 +87,8 @@ function calculate(str)
         else if(!isNaN(num1) && screen.value !== "")
         {
             num2 = +screen.value;
-            screen.value = ops[operator](num1, num2);
+            result = ops[operator](num1, num2);
+            screen.value = Math.round(result * 10000) / 10000;
             num1 = +screen.value;
             newNum = true;
             operator = str;
@@ -93,18 +99,27 @@ function calculate(str)
         if(screen.value !== "") num2 = +screen.value;
         if(isNaN(num1) || isNaN(num2)) return;
         result = ops[operator](num1, num2);
-        screen.value = result;
+        operator = "";
+        screen.value = Math.round(result * 10000) / 10000;
+        newNum = true;
         num1 = undefined;
         num2 = undefined;
         screen.focus();
     }
-    if(screen.value.includes("-"))
+    if(screen.value.includes("-")) isNeg = true;
+    else isNeg = false;
+}
+
+
+function undo()
+{
+    if(operator != "")
     {
-        isNeg = true;
-    }
-    else
-    {
-        isNeg = false;
+        if(isNaN(num2)) screen.value = num1;
+        else screen.value = num2;
+        operator = null;
+        num1 = undefined;
+        num2 = undefined;
     }
 }
 
@@ -127,27 +142,28 @@ const ops = {
 screen.addEventListener("keypress", (event) => {
     const allowedChars = "0123456789";
     const period = ".";
-    const opChars = "+-*/";
-    const eqsign = "=";
+    const opChars = "+-*/=";
+    const c = "c"
     const key = String.fromCharCode(event.keyCode || event.which);
-    if(opChars.includes(key))
+    if(opChars.includes(key) && !locked)
     {
-        operate(key);
+        calculate(key);
     }
-    if(eqsign.includes(key)||event.key === "Enter")
+    if(c.includes(key)) 
     {
-        equals();
+        clear();
     }
-    if(period.includes(key) && screen.value.includes(period))
+
+    if(period.includes(key) && screen.value.includes(period)
+    || !allowedChars.includes(key) && !period.includes(key)
+    || locked) 
+    event.preventDefault();
+    else
     {
-        event.preventDefault();
+        if(newNum == true)
+        {
+            newNum = false;
+            screen.value = "";
+        }
     }
-    else if (!allowedChars.includes(key) && !period.includes(key)) {
-        event.preventDefault();
-    }
-    if(locked)
-    {
-        event.preventDefault();
-    }
-    newNum = false;
 });
