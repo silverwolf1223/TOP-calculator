@@ -144,18 +144,17 @@ screen.addEventListener("keypress", (event) => {
     const period = ".";
     const opChars = "+-*/=";
     const c = "c"
-    const key = String.fromCharCode(event.keyCode || event.which);
-    if(opChars.includes(key) && !locked)
+    const keys = String.fromCharCode(event.keyCode || event.which);
+    if(opChars.includes(keys) && !locked)
     {
-        calculate(key);
+        calculate(keys);
     }
-    if(c.includes(key)) 
+    if(c.includes(keys)) 
     {
         clear();
     }
-
-    if(period.includes(key) && screen.value.includes(period)
-    || !allowedChars.includes(key) && !period.includes(key)
+    if(period.includes(keys) && screen.value.includes(period)
+    || !allowedChars.includes(keys) && !period.includes(keys)
     || locked) 
     event.preventDefault();
     else
@@ -165,5 +164,13 @@ screen.addEventListener("keypress", (event) => {
             newNum = false;
             screen.value = "";
         }
+    }
+});
+
+screen.addEventListener('keydown', (event) =>
+{
+    if(event.key == "Backspace" && locked)
+    {
+        event.preventDefault();
     }
 });
